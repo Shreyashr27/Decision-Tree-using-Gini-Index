@@ -1,0 +1,33 @@
+def material_selection():
+    print("Select the Strength of the material:")
+    print("1. Low\n2. Medium\n3. High")
+    strength = input("Enter your choice (1/2/3): ")
+
+    if strength == "1":
+        print("Suggested Material: Plastic")
+    elif strength == "2":
+        print("Suggested Material: Aluminum")
+    elif strength == "3":
+        print("Select the Weight of the material:")
+        print("1. Light\n2. Medium\n3. Heavy")
+        weight = input("Enter your choice (1/2/3): ")
+
+        if weight == "3":
+            print("Suggested Material: Steel")
+        else:
+            print("Select the Cost of the material:")
+            print("1. Low\n2. Medium\n3. High")
+            cost = input("Enter your choice (1/2/3): ")
+
+            if cost == "3":
+                print("Select the Weight of the material:")
+                print("1. Light\n2. Medium")
+                final_weight = input("Enter your choice (1/2): ")
+                if final_weight == "1":
+                    print("Suggested Material: Composite/Titanium")
+                else:
+                    print("Suggested Material: Titanium")
+            else:
+                print("Suggested Material: Aluminum")
+
+material_selection()
