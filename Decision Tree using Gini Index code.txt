@@ -1,3 +1,74 @@
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import tree
+
+# Load dataset
+data = {
+    'Cost': ['Low', 'Medium', 'High', 'Medium', 'Low', 'High', 'High', 'Low', 'Low', 'High', 
+             'Medium', 'High', 'High', 'Low', 'Medium', 'Low', 'Medium', 'High', 'Medium', 'Low', 
+             'High', 'High', 'Low', 'Medium', 'Low', 'Medium', 'High', 'High', 'Low', 'Medium',
+             'High', 'Low', 'Medium', 'High', 'Medium', 'Medium', 'Medium', 'High', 'Medium', 'Low',
+             'High', 'High', 'Medium', 'Low', 'Low', 'Medium', 'Medium', 'Low', 'Low', 'Low',
+             'Low', 'Medium', 'Medium', 'High', 'Medium', 'Medium', 'Low', 'Medium', 'High', 'Medium',
+             'High', 'High', 'Medium', 'Low', 'High', 'High', 'Medium', 'High', 'Low', 'Medium',
+             'Low', 'High', 'Medium', 'Medium', 'Medium', 'High', 'Medium', 'High', 'Medium', 'Low',
+             'Low', 'High', 'High', 'Medium', 'High', 'High', 'Low', 'Low', 'High', 'High'],
+    'Strength': ['Medium', 'High', 'High', 'High', 'Low', 'High', 'High', 'Low', 'Low', 'High',
+                 'Medium', 'High', 'High', 'Low', 'Medium', 'Medium', 'High', 'High', 'High', 'Low',
+                 'High', 'High', 'Low', 'Medium', 'Low', 'Medium', 'High', 'High', 'Medium', 'High',
+                 'High', 'Low', 'High', 'High', 'High', 'Medium', 'Medium', 'High', 'Medium', 'Low',
+                 'High', 'High', 'High', 'Medium', 'Medium', 'Medium', 'High', 'Low', 'Medium', 'Medium',
+                 'Medium', 'High', 'Medium', 'Medium', 'High', 'Medium', 'High', 'Low', 'High', 'Medium',
+                 'High', 'Medium', 'Medium', 'Medium', 'Medium', 'Medium', 'Medium', 'Low', 'Medium', 'High',
+                 'Low', 'High', 'Medium', 'High', 'Medium', 'Medium', 'Medium', 'High', 'High', 'High',
+                 'Medium', 'High', 'Medium', 'High', 'Medium', 'High', 'Medium', 'Medium', 'High', 'High'],
+    'Corrosion Resistance': ['Yes', 'No', 'No', 'No', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes',
+                             'Yes', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'Yes',
+                             'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'Yes', 'Yes',
+                             'Yes', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes',
+                             'No', 'Yes', 'No', 'Yes', 'Yes', 'No', 'No', 'Yes', 'No', 'Yes',
+                             'No', 'No', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes',
+                             'No', 'No', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes',
+                             'Yes', 'Yes', 'No', 'No', 'Yes', 'Yes', 'No', 'No', 'Yes', 'Yes',
+                             'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'Yes'],
+    'Weight': ['Light', 'Heavy', 'Heavy', 'Heavy', 'Light', 'Heavy', 'Light', 'Light', 'Light', 'Light',
+               'Medium', 'Light', 'Heavy', 'Light', 'Medium', 'Medium', 'Medium', 'Heavy', 'Medium', 'Light',
+               'Medium', 'Light', 'Light', 'Light', 'Light', 'Light', 'Heavy', 'Light', 'Medium', 'Medium',
+               'Light', 'Light', 'Heavy', 'Medium', 'Medium', 'Light', 'Medium', 'Medium', 'Medium', 'Medium',
+               'Heavy', 'Medium', 'Heavy', 'Medium', 'Medium', 'Light', 'Medium', 'Light', 'Medium', 'Medium',
+               'Medium', 'Light', 'Medium', 'Light', 'Medium', 'Light', 'Medium', 'Light', 'Medium', 'Medium',
+               'Heavy', 'Medium', 'Light', 'Medium', 'Medium', 'Medium', 'Medium', 'Light', 'Light', 'Medium',
+               'Medium', 'Light', 'Medium', 'Medium', 'Medium', 'Medium', 'Medium', 'Heavy', 'Heavy', 'Medium',
+               'Medium', 'Light', 'Medium', 'Medium', 'Medium', 'Heavy', 'Heavy', 'Medium', 'Medium', 'Medium'],
+    'Material': ['Aluminium', 'Steel', 'Steel', 'Steel', 'Plastic', 'Steel', 'Composite', 'Plastic', 'Plastic', 'Titanium',
+                 'Aluminium', 'Composite', 'Steel', 'Plastic', 'Aluminium', 'Aluminium', 'Aluminium', 'Steel', 'Aluminium', 'Plastic',
+                 'Titanium', 'Composite', 'Plastic', 'Aluminium', 'Plastic', 'Aluminium', 'Steel', 'Composite', 'Aluminium', 'Aluminium',
+                 'Steel', 'Plastic', 'Steel', 'Titanium', 'Aluminium', 'Aluminium', 'Aluminium', 'Titanium', 'Aluminium', 'Plastic',
+                 'Steel', 'Composite', 'Steel', 'Aluminium', 'Aluminium', 'Steel', 'Steel', 'Plastic', 'Steel', 'Steel',
+                 'Plastic', 'Aluminium', 'Aluminium', 'Titanium', 'Steel', 'Steel', 'Plastic', 'Steel', 'Composite', 'Aluminium',
+                 'Steel', 'Composite', 'Steel', 'Plastic', 'Titanium', 'Composite', 'Steel', 'Steel', 'Composite', 'Plastic',
+                 'Aluminium', 'Steel', 'Plastic', 'Aluminium', 'Composite', 'Aluminium', 'Aluminium', 'Steel', 'Steel', 'Composite',
+                 'Plastic', 'Titanium', 'Steel', 'Composite', 'Aluminium', 'Titanium', 'Plastic', 'Steel', 'Composite', 'Titanium']
+}
+
+df = pd.DataFrame(data)
+
+# Encode categorical data
+df_encoded = pd.get_dummies(df, columns=['Cost', 'Strength', 'Corrosion Resistance', 'Weight'])
+
+# Features and labels
+X = df_encoded.drop('Material', axis=1)
+y = df['Material']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Decision Tree model
+clf = DecisionTreeClassifier(criterion='gini', random_state=42)
+clf.fit(X_train, y_train)
+
+# Function to predict material
 def material_selection():
     print("Select the Strength of the material:")
     print("1. Low\n2. Medium\n3. High")
